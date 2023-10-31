@@ -10,7 +10,7 @@ app.listen(port, () => {
 app.use(express.static('public')) //listens for all files within the 'public' folder
 app.use(express.json({limit: '1mb'})) //need this for JSON to be allowed to be used*/
 
-const url = "https://sports.williamhill.com/betting/en-gb/football/OB_EV29347684/portugal-women-vs-austria-women"
+const url = "https://sports.williamhill.com/betting/en-gb/football/OB_EV29140384/mansfield-vs-port-vale"
 let initialValuesSet = false;
 let scrapedDataItems = {
     home: "",

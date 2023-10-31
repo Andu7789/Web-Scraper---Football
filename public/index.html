@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container bg-primary p-2 text-dark bg-opacity-25 rounded border border-primary-subtle border-3 mt-3 w-75">
+        <div class="row my-3 bg-light text-dark border border-info rounded text-center mx-3">
+             <div class="col-12">
+                <h1 id="scraped-dataMatchTeams">some text</h1>
+            </div>
+        </div>
+        <div class="row my-3 bg-light text-dark border border-info rounded text-center mx-3">
+            <div class="col my-3 bg-light text-dark border border-info rounded text-center mx-3">    
+                <h1 id="scraped-data2">some text</h1>
+                <h1 id="scraped-data3">some text</h1>
+            <div class="row  bg-light text-dark border border-info rounded text-center "></div>
+                <button type="button" class="btn btn-success my-3 mx-3" id="btnHomeHigher">Higher</button>
+                <button type="button" class="btn btn-danger mx-3" id="btnHomeLower">Lower</button>
+            <div class="row  bg-light text-dark border border-info rounded text-center ">
+                <h1 id="scraped-data6">some text</h1>
+             </div>    
+            </div>
+            
+            <div class="col my-3 bg-light text-dark border border-info rounded text-center mx-3"> 
+                <h1 id="scraped-data5">some text</h1>
+                <h1 id="scraped-data4">some text</h1>
+            <div class="row  bg-light text-dark border border-info rounded text-center "></div>
+                <button type="button" class="btn btn-success my-3 mx-3" id="btnHomeHigher">Higher</button>
+                <button type="button" class="btn btn-danger mx-3" id="btnHomeLower">Lower</button>
+            <div class="row  bg-light text-dark border border-info rounded text-center ">
+                <h1 id="scraped-data7">some text</h1>
+            </div>    
+            </div>
+            
+        </div>
+        <div class="d-flex justify-content-center ">
+            <div class="row my-3 bg-light text-dark border border-info rounded text-center mx-3 w-50 justify-content-center py-2">
+                <button class="btn btn-primary rounded" type="button" id="resetButton" onclick="fetchData()" style="width: 200px;">Get odds</button>
+            </div>
+        </div>
+    <input class="form-control" type="text" id="URLentry" name="name" placeholder="Enter a URL" style="width: 1000px;">
+    
+
+
+<script>
+
+const UrlInputEl = document.getElementById("URLentry")
+const handle = setInterval(fetchData, 10000) //run every 10 seconds
+
+  
+async function fetchData() {
+
+
+  const UrlInputElValue = encodeURIComponent(UrlInputEl.value);
+  const data = {UrlInputElValue}
+
+  const options = {
+                method : 'POST',
+                headers : {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+try {const response = await fetch('/scrape', options)
+  const jsonResponse  = await response.json()
+
+ const teamsValue = jsonResponse.scrapedDataItems.teams;
+  const homeValue = jsonResponse.scrapedDataItems.home; 
+  const awayValue = jsonResponse.scrapedDataItems.away;
+  const homeoddsValuefirst = jsonResponse.config.homeoddsfirst;
+  const awayoddsValuefirst = jsonResponse.config.awayoddsfirst;
+  const homeoddsValue = jsonResponse.scrapedDataItems.homeodds;
+  const awayoddsValue = jsonResponse.scrapedDataItems.awayodds;
+  
+ 
+  // Update the HTML element with the scraped data
+  document.getElementById('scraped-dataMatchTeams').innerText = teamsValue
+  document.getElementById('scraped-data2').innerText = homeValue
+  document.getElementById('scraped-data5').innerText = awayValue
+  document.getElementById('scraped-data3').innerText = homeoddsValuefirst
+  document.getElementById('scraped-data4').innerText = awayoddsValuefirst
+  document.getElementById('scraped-data6').innerText = homeoddsValue
+  document.getElementById('scraped-data7').innerText = awayoddsValue
+
+  console.log('Data updated:', jsonResponse)
+  console.log(jsonResponse.decimal.homeoddsfirstDecimal)
+  console.log(jsonResponse.decimal.homeOddsDecimal);
+
+  if (jsonResponse.decimal.homeOddsDecimal > jsonResponse.decimal.homeoddsfirstDecimal){
+    const element = document.getElementById('scraped-data6');
+    element.style.color = 'green';
+    console.log("sehehejkh");
+  } 
+  if (jsonResponse.decimal.homeOddsDecimal < jsonResponse.decimal.homeoddsfirstDecimal){
+    const element = document.getElementById('scraped-data6');
+    element.style.color = 'red';
+    console.log("sehehejkh");
+  } 
+
+  if (jsonResponse.decimal.awayOddsDecimal > jsonResponse.decimal.awayoddsfirstDecimal){
+    const element = document.getElementById('scraped-data7');
+    element.style.color = 'green';
+    console.log("sehehejkh");
+  } 
+  if (jsonResponse.decimal.awayOddsDecimal < jsonResponse.decimal.awayoddsfirstDecimal){
+    const element = document.getElementById('scraped-data7');
+    element.style.color = 'red';
+    console.log("sehehejkh");
+  } 
+
+
+        
+} catch {
+    console.error('Error fetching data:', error);
+  }
+  
+
+}
+setInterval(fetchData, 5000) //run every 10 seconds
+
+</script>
+
+    
+</body>
+
+</html>
